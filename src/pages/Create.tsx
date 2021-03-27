@@ -12,6 +12,8 @@ import {
 } from '@material-ui/core';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { useState } from 'react';
+import { useHistory } from 'react-router';
+import { Category } from '../types/Note';
 
 const useStyles = makeStyles({
   field: {
@@ -21,12 +23,12 @@ const useStyles = makeStyles({
   },
 });
 
-type Category = 'money' | 'todos' | 'reminder' | 'work' | string;
-
 export interface CreateProps {}
 
 const Create: React.FC<CreateProps> = () => {
   const classes = useStyles();
+  const history = useHistory();
+
   const [title, setTitle] = useState<string>('');
   const [details, setDetails] = useState<string>('');
   const [titleError, setTitleError] = useState<boolean>(false);
@@ -41,7 +43,17 @@ const Create: React.FC<CreateProps> = () => {
 
     if (title == '') setTitleError(true);
     if (details == '') setDetailsError(true);
-    if (title && details) console.log(title, details);
+    if (title && details) {
+      fetch('http://localhost:8000/notes', {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          details,
+          category,
+        }),
+      }).then(() => history.push('/'));
+    }
   };
 
   return (
