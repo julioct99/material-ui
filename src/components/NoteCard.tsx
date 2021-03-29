@@ -1,6 +1,21 @@
-import { Card, CardContent, CardHeader, IconButton, Typography } from '@material-ui/core';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  IconButton,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
 import { DeleteOutlined } from '@material-ui/icons';
 import { Note } from '../types/Note';
+
+const useStyles = makeStyles({
+  test: {
+    border: (note: Note) => {
+      if (note.category === 'work') return '1px solid red';
+    },
+  },
+});
 
 export interface NoteCardProps {
   note: Note;
@@ -8,8 +23,10 @@ export interface NoteCardProps {
 }
 
 const NoteCard: React.FC<NoteCardProps> = ({ note, handleDelete }) => {
+  const classes = useStyles(note);
+
   return (
-    <Card>
+    <Card elevation={1} className={classes.test}>
       <CardHeader
         action={
           <IconButton onClick={() => handleDelete(note.id)}>
